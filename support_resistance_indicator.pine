@@ -1,0 +1,29 @@
+
+//@version=5
+indicator("Support/Resistance Indicator", overlay=true)
+
+// Input parameters for customization
+resistanceColor = input.color(color.red, "Resistance Line Color")
+supportColor = input.color(color.green, "Support Line Color")
+lookback = input.int(20, minval=1, title="Lookback Period")
+lineWidth = input.int(1, minval=1, title="Line Width")
+
+// Calculate resistance and support levels
+resistanceLevel = ta.highest(high, lookback)
+supportLevel = ta.lowest(low, lookback)
+
+// Plot resistance and support levels
+plot(resistanceLevel, color=resistanceColor, linewidth=lineWidth, title="Resistance")
+plot(supportLevel, color=supportColor, linewidth=lineWidth, title="Support")
+
+// Add labels at recent resistance and support levels
+var float lastResistance = na
+var float lastSupport = na
+
+if ta.change(resistanceLevel)
+    lastResistance := resistanceLevel
+    label.new(bar_index, lastResistance, "Resistance", color=color.new(resistanceColor, 90), style=label.style_label_down, textcolor=color.red)
+
+if ta.change(supportLevel)
+    lastSupport := supportLevel
+    label.new(bar_index, lastSupport, "Support", color=color.new(supportColor, 90), style=label.style_label_up, textcolor=color.green)
